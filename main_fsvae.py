@@ -60,7 +60,7 @@ def train(network, trainloader, opti, epoch):
     for batch_idx, (real_img, labels) in enumerate(trainloader):   
         opti.zero_grad()
         real_img = real_img.to(init_device, non_blocking=True)
-        labels = labels.to(init_device, non_blocking=True)
+        # labels = labels.to(init_device, non_blocking=True)
         # direct spike input
         spike_input = real_img.unsqueeze(-1).repeat(1, 1, 1, 1, n_steps) # (N,C,H,W,T)
         x_recon, q_z, p_z, sampled_z = network(spike_input, scheduled=network_config['scheduled']) # sampled_z(B,C,1,1,T)
@@ -128,7 +128,7 @@ def test(network, testloader, epoch):
     with torch.no_grad():
         for batch_idx, (real_img, labels) in enumerate(testloader):   
             real_img = real_img.to(init_device, non_blocking=True)
-            labels = labels.to(init_device, non_blocking=True)
+            # labels = labels.to(init_device, non_blocking=True)
             # direct spike input
             spike_input = real_img.unsqueeze(-1).repeat(1, 1, 1, 1, n_steps) # (N,C,H,W,T)
 
@@ -288,7 +288,11 @@ if __name__ == '__main__':
     elif dataset_name == "CelebA":
         data_path = os.path.expanduser(data_path)
         train_loader, test_loader = load_dataset_snn.load_celebA(data_path)
-        
+
+    elif dataset_name == "mvtec":
+        data_path = os.path.expanduser(data_path)
+        train_loader, test_loader = load_dataset_snn.load_mvtec(data_path)
+    
     else:
         raise Exception('Unrecognized dataset name.')
     logging.info("dataset loaded")
