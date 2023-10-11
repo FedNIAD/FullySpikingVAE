@@ -227,8 +227,8 @@ def calc_autoencoder_frechet_distance(network, epoch):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('name', type=str)
-    parser.add_argument('-config', action='store', dest='config', help='The path of config file')
+    parser.add_argument('-name', type=str, default='FSVAE')
+    parser.add_argument('-config', action='store', dest='config', help='The path of config file', default='NetworkConfigs/MVTEC.yaml')
     parser.add_argument('-checkpoint', action='store', dest='checkpoint', help='The path of checkpoint, if use checkpoint')
     parser.add_argument('-device', type=int)
 
@@ -318,7 +318,7 @@ if __name__ == '__main__':
     best_loss = 1e8
     for e in range(glv.network_config['epochs']):
         
-        write_weight_hist(net, e)
+        # write_weight_hist(net, e)
         if network_config['scheduled']:
             net.update_p(e, glv.network_config['epochs'])
             logging.info("update p")

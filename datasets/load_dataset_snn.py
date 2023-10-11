@@ -149,7 +149,8 @@ def load_mvtec(data_path):
         # transforms.CenterCrop(148),
         transforms.Resize((input_size, input_size)),
         # transforms.ToTensor(),
-        SetRange])
+        # SetRange
+    ])
 
     # trainset = torchvision.datasets.CelebA(root=data_path,
     #                                        split='train',
