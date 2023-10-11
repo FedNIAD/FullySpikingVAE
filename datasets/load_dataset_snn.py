@@ -3,6 +3,9 @@ import torchvision.datasets
 import torchvision.transforms as transforms
 import torch
 import global_v as glv
+from torch.utils.data.dataset import Dataset
+import pandas as pd
+from torchvision.io import read_image
 
 def load_mnist(data_path):
     print("loading MNIST")
@@ -115,5 +118,55 @@ def load_celebA(data_path):
                                             shuffle=False, num_workers=8, pin_memory=True)
     return trainloader, testloader
 
+class mvtecImageDataset(Dataset):
+    def __init__(self, img_dir, split, transform):
+        self.img_lables = pd.read_csv(img_dir+'/mvtec/transistor/'+split+'/'+split+'.csv')
+        self.img_dir = img_dir
+        self.split = split
+        self.transform = transform
 
+    def __len__(self):
+        return len(self.img_lables)
+
+    def __getitem__(self, idx):
+        img_path = self.img_dir+'/mvtec/transistor/'+self.split+'/'+self.img_lables.iloc[idx, 0]
+        image = read_image(img_path)
+        label = self.img_lables.iloc[idx, 1]
+        if self.transform:
+            image = self.transform(image)
+        return image, label
+
+def load_mvtec(data_path):
+    print("loading mvtec")
+    if not os.path.exists(data_path):
+        os.mkdir(data_path)
+    batch_size = glv.network_config['batch_size']
+    input_size = glv.network_config['input_size']
+
+    SetRange = transforms.Lambda(lambda X: 2 * X - 1.)
+    transform = transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        # transforms.CenterCrop(148),
+        transforms.Resize((input_size, input_size)),
+        # transforms.ToTensor(),
+        SetRange])
+
+    # trainset = torchvision.datasets.CelebA(root=data_path,
+    #                                        split='train',
+    #                                        download=True,
+    #                                        transform=transform)
+    trainset = mvtecImageDataset(img_dir=data_path, split='train', transform=transform)
+    trainloader = torch.utils.data.DataLoader(trainset,
+                                              batch_size=batch_size,
+                                              shuffle=True, num_workers=8, pin_memory=True)
+
+    # testset = torchvision.datasets.CelebA(root=data_path,
+    #                                       split='test',
+    #                                       download=True,
+    #                                       transform=transform)
+    testset = mvtecImageDataset(img_dir=data_path, split='test', transform=transform)
+    testloader = torch.utils.data.DataLoader(testset,
+                                             batch_size=batch_size,
+                                             shuffle=False, num_workers=8, pin_memory=True)
+    return trainloader, testloader
 
