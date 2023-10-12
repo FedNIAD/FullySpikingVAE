@@ -5,7 +5,7 @@ import torch
 import global_v as glv
 from torch.utils.data.dataset import Dataset
 import pandas as pd
-from torchvision.io import read_image
+import PIL
 
 def load_mnist(data_path):
     print("loading MNIST")
@@ -130,7 +130,7 @@ class mvtecImageDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path = self.img_dir+'/mvtec/transistor/'+self.split+'/'+self.img_lables.iloc[idx, 0]
-        image = read_image(img_path)
+        image = PIL.Image.open(img_path)
         label = self.img_lables.iloc[idx, 1]
         if self.transform:
             image = self.transform(image)
@@ -148,8 +148,8 @@ def load_mvtec(data_path):
         transforms.RandomHorizontalFlip(),
         # transforms.CenterCrop(148),
         transforms.Resize((input_size, input_size)),
-        # transforms.ToTensor(),
-        # SetRange
+        transforms.ToTensor(),
+        SetRange
     ])
 
     # trainset = torchvision.datasets.CelebA(root=data_path,
