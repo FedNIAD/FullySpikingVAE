@@ -20,7 +20,7 @@ def test_sample(network, testloader):
     with torch.no_grad():
         real_img, labels = next(iter(testloader))
         real_img = real_img.to(init_device, non_blocking=True)
-        labels = labels.to(init_device, non_blocking=True)
+        # labels = labels.to(init_device, non_blocking=True)
         # direct spike input
         spike_input = real_img.unsqueeze(-1).repeat(1, 1, 1, 1, n_steps) # (N,C,H,W,T)
 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     init_device = torch.device("cuda:0")
     
-    network_config = {"batch_size": 128, "n_steps": 16, "dataset": "CelebA",
+    network_config = {"batch_size": 128, "n_steps": 16, "dataset": "MVTEC",
                         "in_channels": 3, "latent_dim": 128, "input_size": 64, 
                         "k": 20, "loss_func": "mmd", "lr": 0.001}
     
@@ -89,21 +89,21 @@ if __name__ == '__main__':
     net = fsvae.FSVAELarge()
     net = net.to(init_device)
     
-    checkpoint = torch.load('./demo_checkpoint/fsvae_celeba_demo.pth', map_location='cuda:0')
+    checkpoint = torch.load('./checkpoint/FSVAE/best.pth', map_location='cuda:0')
     net.load_state_dict(checkpoint)    
 
-    print("calculating inception score...")
-    inception_s = calc_inception_score(net)
-    print("calculating fid score...")
-    fid_score = calc_clean_fid(net)
-    autoencoder_frechet_distance = calc_autoencoder_frechet_distance(net)
+    # print("calculating inception score...")
+    # inception_s = calc_inception_score(net)
+    # print("calculating fid score...")
+    # fid_score = calc_clean_fid(net)
+    # autoencoder_frechet_distance = calc_autoencoder_frechet_distance(net)
     test_sample(net, test_loader)
     sample(net)
 
     print("###############################")
-    print(f"Inception score: {inception_s}")
-    print(f'FID score: {fid_score}')
-    print(f'Autoencoder Frechet score: {autoencoder_frechet_distance}')
+    # print(f"Inception score: {inception_s}")
+    # print(f'FID score: {fid_score}')
+    # print(f'Autoencoder Frechet score: {autoencoder_frechet_distance}')
     print('save demo_imgs/demo_input.png')
     print('save demo_imgs/demo_recons.png')
     print('save demo_imgs/demo_sample.png')
