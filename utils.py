@@ -2,8 +2,8 @@ import os
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-import pycuda.driver as cuda
-import pycuda.autoinit  # Necessary for using its functions
+# import pycuda.driver as cuda
+# import pycuda.autoinit  # Necessary for using its functions
 import fsvae_models.snn_layers as snn_layers
 
 
@@ -25,39 +25,39 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 
-class aboutCudaDevices():
-    def __init__(self):
-        pass
+# class aboutCudaDevices():
+#     def __init__(self):
+#         pass
 
-    def num_devices(self):
-        """Return number of devices connected."""
-        return cuda.Device.count()
+#     def num_devices(self):
+#         """Return number of devices connected."""
+#         return cuda.Device.count()
 
-    def devices(self):
-        """Get info on all devices connected."""
-        num = cuda.Device.count()
-        print("%d device(s) found:" % num)
-        for i in range(num):
-            print(cuda.Device(i).name(), "(Id: %d)" % i)
+#     def devices(self):
+#         """Get info on all devices connected."""
+#         num = cuda.Device.count()
+#         print("%d device(s) found:" % num)
+#         for i in range(num):
+#             print(cuda.Device(i).name(), "(Id: %d)" % i)
 
-    def mem_info(self):
-        """Get available and total memory of all devices."""
-        available, total = cuda.mem_get_info()
-        print("Available: %.2f GB\nTotal:     %.2f GB" % (available / 1e9, total / 1e9))
+#     def mem_info(self):
+#         """Get available and total memory of all devices."""
+#         available, total = cuda.mem_get_info()
+#         print("Available: %.2f GB\nTotal:     %.2f GB" % (available / 1e9, total / 1e9))
 
-    def attributes(self, device_id=0):
-        """Get attributes of device with device Id = device_id"""
-        return cuda.Device(device_id).get_attributes()
+#     def attributes(self, device_id=0):
+#         """Get attributes of device with device Id = device_id"""
+#         return cuda.Device(device_id).get_attributes()
 
-    def info(self):
-        """Class representation as number of devices connected and about them."""
-        num = cuda.Device.count()
-        string = ""
-        string += ("%d device(s) found:\n" % num)
-        for i in range(num):
-            string += ("    %d) %s (Id: %d)\n" % ((i + 1), cuda.Device(i).name(), i))
-            string += ("          Memory: %.2f GB\n" % (cuda.Device(i).total_memory() / 1e9))
-        return string
+#     def info(self):
+#         """Class representation as number of devices connected and about them."""
+#         num = cuda.Device.count()
+#         string = ""
+#         string += ("%d device(s) found:\n" % num)
+#         for i in range(num):
+#             string += ("    %d) %s (Id: %d)\n" % ((i + 1), cuda.Device(i).name(), i))
+#             string += ("          Memory: %.2f GB\n" % (cuda.Device(i).total_memory() / 1e9))
+#         return string
 
 class CountMulAddANN:
     def __init__(self) -> None:
