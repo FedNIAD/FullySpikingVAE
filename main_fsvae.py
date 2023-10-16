@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import logging
 import argparse
-import pycuda.driver as cuda
+# import pycuda.driver as cuda
 
 import torch
 import torchvision
@@ -13,7 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 import global_v as glv
 from network_parser import parse
 from datasets import load_dataset_snn
-from utils import aboutCudaDevices
+# from utils import aboutCudaDevices
 from utils import AverageMeter
 from utils import CountMulAddSNN
 import fsvae_models.fsvae as fsvae
@@ -242,7 +242,7 @@ if __name__ == '__main__':
         raise Exception('Unrecognized config file.')
 
     if args.device is None:
-        init_device = torch.device("cuda:0")
+        init_device = torch.device("cpu")
     else:
         init_device = torch.device(f"cuda:{args.device}")
     
@@ -260,13 +260,13 @@ if __name__ == '__main__':
     print(network_config)
         
     # Check whether a GPU is available
-    if torch.cuda.is_available():
-        cuda.init()
-        c_device = aboutCudaDevices()
-        print(c_device.info())
-        print("selected device: ", args.device)
-    else:
-        raise Exception("only support gpu")
+    # if torch.cuda.is_available():
+    #     cuda.init()
+    #     c_device = aboutCudaDevices()
+    #     print(c_device.info())
+    #     print("selected device: ", args.device)
+    # else:
+    #     raise Exception("only support gpu")
     
     glv.init(network_config, [args.device])
 
