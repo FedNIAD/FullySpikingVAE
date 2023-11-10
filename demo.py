@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     init_device = torch.device("cuda:0")
     
-    network_config = {"batch_size": 128, "n_steps": 16, "dataset": "MVTEC",
+    network_config = {"batch_size": 16, "n_steps": 16, "dataset": "MVTEC",
                         "in_channels": 3, "latent_dim": 128, "input_size": 64, 
                         "k": 20, "loss_func": "mmd", "lr": 0.001}
     
@@ -84,12 +84,12 @@ if __name__ == '__main__':
     
     # load celeba dataset
     data_path = os.path.expanduser(data_path)
-    _, test_loader = load_dataset_snn.load_celebA(data_path)
+    _, test_loader = load_dataset_snn.load_mvtec(data_path)
         
     net = fsvae.FSVAELarge()
     net = net.to(init_device)
     
-    checkpoint = torch.load('./checkpoint/FSVAE/best.pth', map_location='cuda:0')
+    checkpoint = torch.load('./checkpoint/FSVAE/best1500.pth', map_location='cuda:0')
     net.load_state_dict(checkpoint)    
 
     # print("calculating inception score...")
